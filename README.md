@@ -2,4 +2,4 @@
 Repository for Atlas School
 
 ## Projects
-- ES6 Basics
+- ES6_basic
