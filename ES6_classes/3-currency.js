@@ -29,12 +29,12 @@ class Currency {
   }
 
   get name() {
-    return this.name;
+    return this._name;
   }
 
   /** --------------------------------------- */
   displayFullCurrency() {
-    return `${this.name} (${this._code})`;
+    return `${this._name} (${this._code})`;
   }
 }
 
