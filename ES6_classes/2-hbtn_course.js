@@ -37,7 +37,7 @@ class HolbertonCourse {
    * Students
    */
   set students(students) {
-    if (students instanceof Array == false) {
+    if (students instanceof Array === false) {
       throw new TypeError('Students must be an array');
     }
     this._students = students;
