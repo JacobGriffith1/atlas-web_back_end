@@ -21,7 +21,7 @@ class Pricing {
   /** Currency */
   set currency(currency) {
     if (currency instanceof Currency === false) {
-      throw new TypeError ('currency must be an instance of "Currency"');
+      throw new TypeError('currency must be an instance of Currency');
     }
     this._currency = currency;
   }
