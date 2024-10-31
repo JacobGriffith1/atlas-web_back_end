@@ -1,4 +1,8 @@
-export default function updateStudentGradeByCity(students, city, newGrades) {
+export default function updateStudentGradeByCity(
+  students,
+  city,
+  newGrades,
+) {
   const filterStudents = students.filter(
     (student) => student.location === city,
   );
@@ -11,7 +15,7 @@ export default function updateStudentGradeByCity(students, city, newGrades) {
         }
       }
       if (student.grade === undefined) {
-          student.grade =  'N/A;'
+        student.grade = 'N/A';
       }
       return student;
     },
