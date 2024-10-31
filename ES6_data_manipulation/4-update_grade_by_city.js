@@ -12,10 +12,10 @@ export default function updateStudentGradeByCity(students, city, newGrades) {
       }
       if (student.grade === undefined) {
           student.grade =  'N/A;'
-        }
-        return student;
-      },
-    );
+      }
+      return student;
+    },
+  );
 
-    return gradeStudents;
+  return gradeStudents;
 }
