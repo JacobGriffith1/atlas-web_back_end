@@ -5,11 +5,8 @@ export default function getFullResponseAPI(success) {
         status: 200,
         body: 'Success',
       });
-    } 
-    else {
-      reject(new Error(
-        'The fake API is not working currently'
-      ));
+    } else {
+      reject(new Error('The fake API is not working currently'));
     }
   });
 }
