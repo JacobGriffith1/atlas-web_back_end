@@ -7,3 +7,4 @@ Repository for Atlas School
 - ES6_data_manipulation
 - ES6_promise
 - python_variable_annotations
+- python_async_function
