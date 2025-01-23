@@ -9,3 +9,4 @@ Repository for Atlas School
 - python_variable_annotations
 - python_async_function
 - python_async_comprehension
+- caching
