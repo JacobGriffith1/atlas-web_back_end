@@ -11,11 +11,11 @@ class BasicCache(BaseCaching):
     '''
     def put(self, key, item):
         '''
-        Method puts a new k/v pair 
+        Method puts a new k/v pair
         '''
         if (key and item):
             self.cache_data[key] = item
-    
+
     def get(self, key):
         '''
         Method returns value linked to key
