@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 '''
-Basic caching module
+FIFO caching module
 '''
 BaseCaching = __import__('base_caching').BaseCaching
 
@@ -11,7 +11,7 @@ class FIFOCache(BaseCaching):
     '''
     def __init__(self):
         '''
-        Inititalize method
+        Initialize method
         '''
         super().__init__()
         self.keys = []
