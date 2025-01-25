@@ -11,7 +11,7 @@ class BasicCache(BaseCaching):
     '''
     def put(self, key, item):
         '''
-        Method puts a new k/v pair
+        Method puts a new k/v pair in cache
         '''
         if (key and item):
             self.cache_data[key] = item
