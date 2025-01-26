@@ -61,7 +61,7 @@ class Server:
         '''
         hyperDict = {}
         trueData = self.get_page(page, page_size)
-        truePageSize =  len(trueData)
+        truePageSize = len(trueData)
         trueTotalPages = math.ceil(len(self.dataset()) / page_size)
         if page < trueTotalPages:
             nextPage = page + 1
