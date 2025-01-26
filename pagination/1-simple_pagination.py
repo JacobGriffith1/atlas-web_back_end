@@ -19,6 +19,7 @@ def index_range(page: int, page_size: int) -> Tuple[int, int]:
     end = page * page_size
     return (start, end)
 
+
 class Server:
     """Server class to paginate a database of popular baby names.
     """
@@ -42,8 +43,8 @@ class Server:
         '''
         Get results per page
         '''
-        assert type(page) == int and page > 0
-        assert type(page_size) == int and page_size > 0
+        assert type(page) is int and page > 0
+        assert type(page_size) is int and page_size > 0
         pageList = []
         results = self.dataset()
         indexes = index_range(page, page_size)
