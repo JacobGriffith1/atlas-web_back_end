@@ -36,8 +36,8 @@ class LRUCache(BaseCaching):
         '''
         Method returns value linked to key
         '''
-        if key:
-            for k in self.cache_data.keys():
-                if k == key:
-                    return self.cache_data.get[key]
+        if key and key in self.keys:
+            self.keys.remove(key)
+            self.keys.apppend(key)
+            return self.cache_data[key]
         return None
