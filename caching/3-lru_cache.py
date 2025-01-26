@@ -39,5 +39,5 @@ class LRUCache(BaseCaching):
         if key and key in self.keys:
             self.keys.remove(key)
             self.keys.append(key)
-            return self.cache_data(key)
+            return self.cache_data[key]
         return None
