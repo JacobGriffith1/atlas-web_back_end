@@ -39,5 +39,5 @@ class LRUCache(BaseCaching):
         if key:
             for k in self.cache_data.keys():
                 if k == key:
-                    return self.cache_data.get(key)
+                    return self.cache_data.get[key]
         return None
