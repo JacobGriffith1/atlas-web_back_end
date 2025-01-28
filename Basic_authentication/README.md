@@ -47,6 +47,7 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/status" -vvv
 * Closing connection 0
 bob@dylan:~$
 ```
+<br />
 
 ## 1. Error Handler: Unauthorized
 What's the HTTP status code for a request unauthorized? ```401```, of course!
@@ -94,6 +95,7 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/unauthorized" -vvv
 * Closing connection 0
 bob@dylan:~$
 ```
+<br />
 
 ## 2. Error Handler: Forbidden
 What's the HTTP status code for a request where the user is authenticated but not allowed to access a resource? ```403```, of course!
@@ -141,6 +143,7 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/forbidden" -vvv
 * Closing connection 0
 bob@dylan:~$
 ```
+<br />
 
 ## 3. Auth Class
 Now you will create a class to manage the API authentication.
@@ -154,6 +157,7 @@ Now you will create a class to manage the API authentication.
     - public method ```def authorization_header(self, request=None) -> str:``` that returns ```None``` - ```request``` will be the Flask request object
     - public method ```def current_user(self, request=None) -> TypeVar('User'):``` that returns ```None``` - ```request``` will be the Flask request object
 The class is the template for all authentication system you will implement.
+<br />
 
 ## 4. Define Which Routes Don't Need Authentication
 Update the method ```def require_auth(self, path: str, excluded_paths: List[str]) -> bool:``` in ```Auth``` that returns ```True``` if the ```path``` is not in the list of strungs ```excluded_paths```:
@@ -162,6 +166,7 @@ Update the method ```def require_auth(self, path: str, excluded_paths: List[str]
 - Returns ```False``` if ```path``` is in ```excluded_paths```
 - You can assume ```excluded_paths``` contains string path always ending by a ```/```
 - This method must be slash tolerant: ```path=/api/v1/status``` and ```path=/api/v1/status/``` must be returned ```False``` if ```excluded_paths``` contains ```/api/v1/status/```
+<br />
 
 ## 5. Request Validation!
 Now you will validate all requests to secure the API:
@@ -210,6 +215,7 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/users" -H "Authorization: Test"
 }
 bob@dylan:~$
 ```
+<br />
 
 ## 6. Basic Auth
 Create a class ```BasicAuth``` that inherits from ```Auth```. For the moment, this class will be empty.
@@ -246,6 +252,7 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/users" -H "Authorization: Test"
 }
 bob@dylan:~$
 ```
+<br />
 
 ## 7. Basic - Basic64 Part
 Add the method ```def extract_base64_authorization_header(self, authorization_header: str) -> str:``` in the class ```BasicAuth``` that returns the Base64 part of the ```Authorization``` header for a Basic Authentication:
@@ -254,6 +261,7 @@ Add the method ```def extract_base64_authorization_header(self, authorization_he
 - Return ```None``` if ```authorization_header``` doesn't start by ```Basic``` (with a space at the end)
 - Otherwise, return the value after ```Basic``` (after the space)
 - You can assume ```authorization_header``` contains only one ```Basic```
+<br />
 
 ## 8. Basic - Base64 Decode
 Add the method ```def decode_base64_authorization_header(self, base64_authorization_header: str) -> str:``` in the class ```BasicAuth``` that returns the decoded value of a Base64 string ```base64_authorization_header```:
@@ -261,6 +269,7 @@ Add the method ```def decode_base64_authorization_header(self, base64_authorizat
 - Return ```None``` if ```base64_authorization_header``` is not a string
 - Return ```None``` if ```base64_authorization_header``` is not a valid Base64 - you can use ```try/except```
 - Otherwise, return the decoded value as UTF8 string - you can use ```decode('utf-8')```
+<br />
 
 ## 9. Basic - User Credentials
 Add the method ```def extract_user_credentials(self, decoded_base64_authorization_header: str) -> (str, str)``` in the class ```BasicAuth``` that returns the user email and password from the Base64 decoded value.
@@ -270,6 +279,7 @@ Add the method ```def extract_user_credentials(self, decoded_base64_authorizatio
 - Return ```None, None``` if ```decoded_base64_authorization_header``` doesn't contain ```:```
 - Otherwise, return the user email and the user password - these 2 values must be separated by a ```:```
 - You can assume ```decoded_base64_authorization_header``` will contain only one ```:```
+<br />
 
 ## 10. Basic - User Object
 Add the method ```def user_object_from_credentials(self, user_email: str, user_pwd: str) -> TypeVar('User'):``` in the class ```BasicAuth``` that returns the ```User``` instance based on their email and password.
@@ -278,6 +288,7 @@ Add the method ```def user_object_from_credentials(self, user_email: str, user_p
 - Return ```None``` if your database (file) doesn't contain any ```User``` instance with email equal to ```user_email``` - you should use the class method ```search``` of the ```User``` to lookup the list of users based on their email. Don't forget to test all cases: "what if there is no user in DB?", etc.
 - Return ```None``` if ```user_pwd``` is not the password of the ```User``` instance found - you must use the method ```is_valid_password``` of ```User```
 - Otherwise, return the ```User``` instance
+<br />
 
 ## 11. Basic - Overload current_user - and BOOM!
 Now, you have all pieves for having a complete Basic authentication.
@@ -354,3 +365,4 @@ bob@dylan:~$ curl "http://0.0.0.0:5000/api/v1/users" -H "Authorization: Basic Ym
 ]
 bob@dylan:~$ 
 ```
+<br />
