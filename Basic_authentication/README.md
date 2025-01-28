@@ -8,6 +8,7 @@ At the end of this project, understand:
 - How to encode a string in Base64
 - What Basic authentication means
 - How to send the Authorization header
+<br />
 
 ## Tasks
 
