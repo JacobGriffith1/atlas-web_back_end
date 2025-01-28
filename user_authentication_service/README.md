@@ -193,3 +193,80 @@ In this task, you will implement the ```Auth.valid_login``` method. It should ex
 Try locating the user by email. If it exists, check the password with ```bcrypt.checkpw```. If it matches, return ```True```. In any other case, return ```False```.
 <br />
 
+## 9. Generate UUIDs
+In this task you will implement a ```_generate_uuid``` function in the ```auth``` module. The function should return a string representaion of a new UUID. Use the ```uuid``` module.
+Note that the method is private to the ```auth``` module and should **NOT** be used outside of it.
+<br />
+
+## 10. Get Session ID
+In this task, you will implement the ```Auth.create_session``` method. It takes an ```email``` string argument and returns the session ID as a string.
+The method should find the user corresponding to the email, generate a new UUID and store it in the database as the user's ```session_id```, then return the session ID.
+Remember that only public methods of ```self._db``` can be used.
+<br />
+
+## 11. Log In
+In this task, you will implement a ```login``` function to respond to the ```POST /sessions``` route.
+The request is expected to contain form data with ```"email"``` and a ```"password"``` fields.
+If the login information is incorrect, use ```flask.abort``` to respond with a 401 HTTP status.
+Otherwise, create a new session for the user, store the session ID as a cookie with key ```"session_id"``` on the response and return a JSON payload of the form
+```
+{"email": "<user email>", "message": "logged in"}
+```
+<br />
+
+## 12. Find User by Session ID
+In this task, you will implement the ```Auth.get_user_from_session_id``` method. It takes a single ```session_id``` string argument and returns the corresponding ```User``` or ```None```.
+If the session ID is ```None``` or no user is found, return ```None```. Otherwise, return the corresponding user.
+Remember to only use public methods of ```self._db```.
+<br />
+
+## 13. Destroy Session
+In this task, you will implement ```Auth.destroy_session```. The method takes a single ```user_id``` integer argument and returns ```None```.
+The method updates the corresponding user's session ID to ```None```.
+Remember to only use public methods of self._db.
+<br />
+
+## 14. Log Out
+In this task, you will implement a ```logout``` function to respond to the ```DELETE /sessions``` route.
+The request is expected to contain the session ID as a cookie with key ```"session_id"```.
+Find the user with the requested session ID. If the user exists, destroy the session and redirect the user to ```GET /```. If the user does not exist, respond with a 403 HTTP status.
+<br />
+
+## 15. User Profile
+In this task, you will implement a ```profile``` function to respond to the ```GET /profile``` route.
+The request is expected to contain a ```session_id``` cookie. Use it to find the user. If the user exists, respond with a 200 HTTP status and the following JSON payload:
+```
+{"email": "<user email>"}
+```
+If the session ID is invalid or the user does not exist, respond with a 403 HTTP status.
+<br />
+
+## 16. Generate Reset Password Token
+In this task, you will implement the ```Auth.get_reset_password_token``` method. It takes an ```email``` string argument and returns a string.
+Find the user corresponding to the email. If the user does not exist, raise a ```ValueError``` exception. If it exists, generate a UUID and update the user's ```reset_token``` database field. Return the token.
+<br />
+
+## 17. Get Reset Password Token
+In this task, you will implement a ```get_reset_password_token``` function to respond to the ```POST /reset_password``` route.
+The request is expected to contain form data with the ```"email"``` field.
+If the email is not registered, respond with a 403 status code. Otherwise, generate a token and respond with a 200 HTTP status and the following JSON payload:
+```
+{"email": "<user email>", "reset_token": "<reset token>"}
+```
+<br />
+
+## 18. Update Password
+In this task, you will implement the ```Auth.update_password``` method. It takes ```reset_token``` string argument and a ```password``` string argument and returns ```None```.
+Use the ```reset_token``` to find the corresponding user. If it doesn't exist, raises a ```ValueError``` exception.
+Otherwise, hash the password and update the user's ```hashed_password``` field with the new hashed password and the ```reset_token``` field to ```None```.
+<br />
+
+## 19. Update Password End-Point
+In this task, you will implement the ```update_password``` function in the ```app``` module to respond to the ```PUT /reset_password``` route.
+The request is expected to contain form data with fields ```"email"```, ```"reset_token"``` and ```"new_password"```.
+Update the password. If the token is invalid, catch the exception with a 403 HTTP code.
+If the token is valid, respond with a 200 HTTP code and the following JSON payload:
+```
+{"email": "<user email>", "message": "Password updated"}
+```
+<br />
