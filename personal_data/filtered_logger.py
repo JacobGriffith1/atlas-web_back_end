@@ -74,8 +74,7 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
         user=getenv('PERSONAL_DATA_DB_USERNAME', 'root'),
         password=getenv('PERSONAL_DATA_DB_PASSWORD', ''),
         host=getenv('PERSONAL_DATA_DB_HOST', 'localhost'),
-        dbName=getenv('PERSONAL_DATA_DB_NAME')
-    )
+        dbName=getenv('PERSONAL_DATA_DB_NAME'))
 
     return connectedDB
 
@@ -94,7 +93,7 @@ def main():
     for row in dbCursor:
         rowString = ''.join(f'{f}={str(r)}; ' for r, f in zip(row, fields))
         log.info(rowString.strip())
-    
+
     dbCursor.close()
     db.close()
 
