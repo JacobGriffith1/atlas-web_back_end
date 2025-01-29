@@ -19,11 +19,11 @@ class BasicAuth(Auth):
         E.B.A.H. function
         '''
         if (authorization_header is None
-            or type(authorization_header) is not str
-            or authorization_header[0:6] != 'Basic '):
+                or type(authorization_header) is not str
+                or authorization_header[0:6] != 'Basic '):
             return None
         return authorization_header[6:]
-    
+
     def decode_base64_authorization_header(self,
                                            base64_authorization_header: str
                                            ) -> str:
@@ -31,7 +31,7 @@ class BasicAuth(Auth):
         D.B.A.H. function
         '''
         if (base64_authorization_header is None
-            or type(base64_authorization_header) is not str):
+                or type(base64_authorization_header) is not str):
             return None
         try:
             b64_bytes = base64_authorization_header.encode("utf-8")
@@ -48,8 +48,8 @@ class BasicAuth(Auth):
         E.U.C. function
         '''
         if (decoded_base64_authorization_header is None
-            or type(decoded_base64_authorization_header) is not str
-            or decoded_base64_authorization_header.find(":") == -1):
+                or type(decoded_base64_authorization_header) is not str
+                or decoded_base64_authorization_header.find(":") == -1):
             return None, None
         separator = decoded_base64_authorization_header.find(":")
         user = decoded_base64_authorization_header[:separator]
@@ -64,9 +64,9 @@ class BasicAuth(Auth):
         U.O.F.C. function
         '''
         if (user_email is None
-            or type(user_email) is not str
-            or user_pwd is None
-            or type(user_pwd) is not str):
+                or type(user_email) is not str
+                or user_pwd is None
+                or type(user_pwd) is not str):
             return None
         try:
             user = User.search({'email': user_email})
