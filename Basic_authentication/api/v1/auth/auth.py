@@ -28,7 +28,7 @@ class Auth():
             elif path == item:
                 return False
         return True
-    
+
     def authorization_header(self, request=None) -> str:
         '''
         Returns auth header
@@ -36,7 +36,7 @@ class Auth():
         if request is None:
             return None
         return request.headers.get('Authorization')
-    
+
     def current_user(self, request=None) -> TypeVar('User'):
         '''
         Returns current user info
