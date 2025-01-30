@@ -31,7 +31,7 @@ class SessionAuth(Auth):
         '''
         if session_id is None:
             return None
-        if type(session_id) is None:
+        if type(session_id) is not str:
             return None
         return SessionAuth.user_id_by_session_id(session_id)
 
