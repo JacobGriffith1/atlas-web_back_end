@@ -19,7 +19,7 @@ class SessionAuth(Auth):
         '''
         if user_id is None:
             return None
-        if type(user_id) != str:
+        if type(user_id) is not str:
             return None
         session_id = str(uuid.uuid4())
         SessionAuth.user_id_by_session_id[session_id] = user_id

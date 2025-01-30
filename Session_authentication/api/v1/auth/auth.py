@@ -17,7 +17,7 @@ class Auth():
         '''
         if path is None or excluded_paths is None or excluded_paths == '':
             return True
-        elif path[len(path) - 1] is not '/':
+        elif path[len(path) - 1] != '/':
             path += '/'
         for item in excluded_paths:
             astr = item.find("*")
