@@ -4,8 +4,10 @@ Test client.py
 '''
 from client import GithubOrgClient
 import unittest
-from unittest.mock import patch, PropertyMock
-from parameterized import parameterized
+from unittest.mock import patch, PropertyMock, Mock
+from parameterized import parameterized, parameterized_class
+from fixtures import TEST_PAYLOAD
+from typing import Any, Dict, List
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -66,3 +68,50 @@ class TestGithubOrgClient(unittest.TestCase):
         '''Test license checker
         '''
         self.assertEqual(GithubOrgClient.has_license(repo, license), expected)
+
+
+@parameterized_class(
+    ('org_payload', 'repos_payload', 'expected_repos', 'apache2_repos'),
+    TEST_PAYLOAD
+)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    '''Integration tests for GithubOrgClient
+    '''
+    org_payload: Dict[str, str]
+    repos_payload: List[Dict[str, Any]]
+    expected_repos: List[str]
+    apache2_repos: List[str]
+
+    @classmethod
+    def setUpClass(cls):
+        '''Setup
+        '''
+        def get_payload(url):
+            '''Gets mocked url
+            '''
+            mock_response = Mock()
+            org = GithubOrgClient.ORG_URL.format(org="test")
+
+            if url == org:
+                mock_response.json.return_value = cls.org_payload
+            elif url == cls.org_payload.get("repos_url"):
+                mock_response.json.return_value = cls.repos_payload
+            else:
+                mock_response.json.return_value = {}
+
+            return mock_response
+
+        cls.get_patcher = patch("requests.get", side_effect=get_payload)
+        cls.mock_get = cls.get_patcher.start()
+
+    @classmethod
+    def tearDownClass(cls):
+        '''Teardown class after test
+        '''
+        cls.get_patcher.stop()
+
+    def test_public_repos(self):
+        '''Test that public_repos gets expected data
+        '''
+        qry = GithubOrgClient("test")
+        self.assertEqual(qry.public_repos(), self.expected_repos)
