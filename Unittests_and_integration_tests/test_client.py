@@ -36,7 +36,7 @@ class TestGithubOrgClient(unittest.TestCase):
             rsp = qry._public_repos_url
 
             self.assertEqual(rsp, expected)
-    
+
     @patch("client.get_json")
     def test_public_repos(self, get_json_mock):
         '''Test public_repos for expected output
