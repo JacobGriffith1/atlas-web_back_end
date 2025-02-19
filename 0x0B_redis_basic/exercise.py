@@ -17,6 +17,7 @@ def count_calls(method: Callable) -> Callable:
         return method(self, *args, **kwargs)
     return wrapper
 
+
 def call_history(method: Callable) -> Callable:
     '''Decorator stores the history of i/o for a particular function'''
     @wraps(method)
@@ -29,6 +30,7 @@ def call_history(method: Callable) -> Callable:
         self._redis.rpush(method.__qualname__ + ':outputs', outputs)
         return outputs
     return wrapper
+
 
 def replay(func: Callable):
     '''Function displays the history of a particular function's calls'''
