@@ -56,6 +56,7 @@ def replay(func: Callable):
 
         print(f'{func_name}(*{i}) -> {o}')
 
+
 class Cache:
     '''Caching class'''
 
