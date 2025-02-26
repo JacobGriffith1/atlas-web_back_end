@@ -363,10 +363,12 @@ bob@dylan:~$
 ```
 
 If you want to add a test to validate your integration, you will need to add this file: 
-<details>```.babelrc```<details>
+<details>
+<summary>```.babelrc```</summary>
 
 ```
 {
     "presets": [["env", {"exclude": ["transform-regenerator"]}]]
 }
 ```
+</details>
