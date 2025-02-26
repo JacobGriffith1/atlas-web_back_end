@@ -364,9 +364,7 @@ bob@dylan:~$
 
 If you want to add a test to validate your integration, you will need to add this file: 
 <details>
-<summary>
-```.babelrc```
-</summary>
+<summary>.babelrc</summary>
 
 ```
 {
