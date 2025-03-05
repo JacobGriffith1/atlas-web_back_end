@@ -66,8 +66,14 @@ function countStudents(path) {
                 console.log(`Number of students in ${field}: ${names.length}. List: ${names.join(', ')}`);
             }
 
+            //Prepare response data
+            const responseData = {
+                totalStudents,
+                fieldCounts
+            };
+
             // Resolve the Promise once processing is complete
-            resolve();
+            resolve(responseData);
             // console.log('Promise resolved');
         });
     });
