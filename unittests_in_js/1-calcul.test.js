@@ -88,4 +88,9 @@ describe('div', () => {
         const result = calculateNumber(calcType, 1.4, 4.2);
         assert.equal(result, 0.25);
     });
+
+    it('Zero test case', () => {
+        const result = calculateNumber(calcType, 0, 4.2);
+        assert.equal(result, 'Error');
+    });
 });
