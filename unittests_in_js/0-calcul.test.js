@@ -21,4 +21,9 @@ describe('Calculator', () => {
         const result = calculateNumber(1.5, 3.7);
         assert.equal(result, 6);
     });
+
+    it('Numbers both round down', () => {
+        const result = calculateNumber(1.4, 3.2);
+        assert.equal(result, 4);
+    });
 });
