@@ -90,7 +90,7 @@ describe('div', () => {
     });
 
     it('Zero test case', () => {
-        const result = calculateNumber(calcType, 0, 4.2);
+        const result = calculateNumber(calcType, 5, 0);
         assert.equal(result, 'Error');
     });
 });
