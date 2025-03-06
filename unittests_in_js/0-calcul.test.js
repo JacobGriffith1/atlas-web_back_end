@@ -9,7 +9,7 @@ describe('Calculator', () => {
 
     it('Number rounded up', () => {
         const result = calculateNumber(1, 3.7);
-        assert.equal(result, 4);
+        assert.equal(result, 5);
     });
 
     it('Numbers round down and up', () => {
