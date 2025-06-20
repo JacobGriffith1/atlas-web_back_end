@@ -1,4 +1,4 @@
-import expresss from 'express';
+import express from 'express';
 import routes from './routes/index.js';
 
 const app = express();

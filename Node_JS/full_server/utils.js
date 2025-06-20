@@ -1,24 +1,25 @@
-import { rejects } from 'assert';
-import { error } from 'console';
 import fs from 'fs';
-import { resolve } from 'path';
 
 export function readDatabase(filePath) {
-    return new Promise((resolve, reject) => {
-        fs.readFile(filePath, 'utf-8', (err, data) => {
-            if (err) return reject(Error('Cannot load the database'));
+  return new Promise((resolve, reject) => {
+    fs.readFile(filePath, 'utf-8', (err, data) => {
+      if (err) return reject(Error('Cannot load the database'));
 
-            const lines = data.trim().split('\n').slice(1);
-            const students = {};
+      const lines = data.trim().split('\n').slice(1);
+      const students = {};
 
-            for (const line of lines) {
-                const [, , , field] = line.split(',');
-                const firstname = line.split(',')[0];
-                if (!students[field]) students[field] = [];
-                students[field].push(firstname);
-            }
+      for (const line of lines) {
+        const parts = line.split(',');
+        const firstname = parts.length > 0 ? parts[0].trim() : null;
+        const field = parts.length > 3 ? parts[3].trim() : null;
 
-            resolve(students);
-        });
+        if (!firstname || !field) continue;
+
+        if (!students[field]) students[field] = [];
+        students[field].push(firstname);
+      }
+
+      resolve(students);
     });
+  });
 }

@@ -1,3 +1,0 @@
-"scripts": {
-  "dev": "nodemon --exec babel-node --presets babel-preset-env ./full_server/server.js ./database.csv"
-}
