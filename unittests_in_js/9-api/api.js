@@ -11,8 +11,10 @@ app.get('/cart/:id(\\d+)', (req, res) => {
     res.send(`Payment methods for cart ${id}`);
 });
 
-app.listen(7865, () => {
+if (require.main === module) {
+  app.listen(7865, () => {
     console.log('API available on localhost port 7865');
-});
+  });
+}
 
 module.exports = app;
