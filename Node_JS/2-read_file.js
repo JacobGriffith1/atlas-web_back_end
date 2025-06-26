@@ -6,11 +6,9 @@ function countStudents(path) {
     try {
         // Read the file synchronously
         const data = fs.readFileSync(path, 'utf8');
-        //console.log('FILE DATA LOADED SUCCESSFULLY.')
 
         // Split the data into an array of lines
         const lines = data.split('\r').filter(line => line.trim() !== '', '\n'); // Remove empty lines
-        //console.log('Lines:', lines);
 
         // Ensure file has a header and at least one data row
         if (lines.length <= 1) {
@@ -28,7 +26,7 @@ function countStudents(path) {
             throw new Error('Cannot load the database');
         }
 
-        // Create an objectto store the students grouped by field
+        // Create an object to store the students grouped by field
         const fieldCounts = {};
 
         // Loop through each student (skip first row since it's a header)

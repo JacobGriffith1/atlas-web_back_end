@@ -4,7 +4,6 @@ const fs = require('fs');
 
 function countStudents(path) {
     return new Promise((resolve, reject) => {
-        // console.log('Promise made')
         fs.readFile(path, 'utf8', (err, data) => {
             if (err) {
                 // If there's an error, reject Promise with specified error
@@ -38,7 +37,6 @@ function countStudents(path) {
             //Process each student entry (skip header)
             for (let i = 1; i < lines.length; i++) {
                 const studentData = lines[i].split(',');
-                // console.log(`Lines: ${i}`);
 
                 // Skip lines that do not have the correct numer of columns
                 if (studentData.length < headers.length) continue;
@@ -74,7 +72,6 @@ function countStudents(path) {
 
             // Resolve the Promise once processing is complete
             resolve(responseData);
-            // console.log('Promise resolved');
         });
     });
 }

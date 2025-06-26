@@ -32,7 +32,6 @@ app.get('/students', async (req, res) => {
     // Send the formatted response text to the client
     res.send(responseText.trim());
   } catch (error) {
-    // If there's an error, send a 500 response with the error message
     res.status(500).send('Cannot load the database');
   }
 });
