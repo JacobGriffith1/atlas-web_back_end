@@ -299,37 +299,471 @@ bob@dylan:~$
 Now you have a basic Redis-based queuing system where you have a process to generate job and a second one to process it. These 2 processes can be in 2 different servers, which we also call “background workers”.
 
 ## 6. Create the Job Creator
+In a file named ```6-job_creator.js```:
+- Create a queue with ```Kue```
+- Create an object containing the Job data with the following format:
+```
+{
+  phoneNumber: string,
+  message: string,
+}
+```
+- Create a queue named ```push_notification_code```, and create a job with the object created before
+- When the job is created without error, log to the console ```Notification job created: JOB ID```
+- When the job is completed, log to the console ```Notification job completed```
+- When the job is failing, log to the console ```Notification job failed```
+```
+bob@dylan:~$ npm run dev 6-job_creator.js 
 
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "6-job_creator.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 6-job_creator.js`
+Notification job created: 1
+```
+Nothing else will happen - to process the job, go to the next task!
+
+If you execute multiple time this file, you will see the ```JOB ID``` increasing - it means you are storing new job to process…
 
 ## 7. Create the Job Processor
+In a file named ```6-job_processor.js```:
 
+- Create a queue with ```Kue```
+- Create a function named ```sendNotification```:
+    - It will take two arguments ```phoneNumber``` and ```message```
+    - It will log to the console ```Sending notification to PHONE_NUMBER, with message: MESSAGE```
+- Write the queue process that will listen to new jobs on ```push_notification_code```:
+    - Every new job should call the ```sendNotification``` function with the phone number and the message contained within the job data
+
+<b>Requirements:</b>
+- You only need one Redis server to execute the program
+- You will need to have two node processes to run each script at the same time
+- You muse use ```Kue``` to set up the queue
+
+<b>Terminal 2:</b>
+
+```
+bob@dylan:~$ npm run dev 6-job_processor.js 
+
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "6-job_processor.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 6-job_processor.js`
+Sending notification to 4153518780, with message: This is the code to verify your account
+```
+
+<b>Terminal 1:</b> let's queue a new job!
+
+```
+bob@dylan:~$ npm run dev 6-job_creator.js 
+
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "6-job_creator.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 6-job_creator.js`
+Notification job created: 2
+```
+
+<b>And at the same time in Terminal 2:</b>
+
+```
+Sending notification to 4153518780, with message: This is the code to verify your account
+```
+
+BOOM! same as ```5-subscriber.js``` and ```5-publisher.js``` but with a module to manage jobs.
 
 ## 8. Track Progress and Errors with Kue: Create the Job Creator
+In a file named ```7-job_creator.js```:
 
+Create an array ```jobs``` with the following data inside:
+
+```
+const jobs = [
+  {
+    phoneNumber: '4153518780',
+    message: 'This is the code 1234 to verify your account'
+  },
+  {
+    phoneNumber: '4153518781',
+    message: 'This is the code 4562 to verify your account'
+  },
+  {
+    phoneNumber: '4153518743',
+    message: 'This is the code 4321 to verify your account'
+  },
+  {
+    phoneNumber: '4153538781',
+    message: 'This is the code 4562 to verify your account'
+  },
+  {
+    phoneNumber: '4153118782',
+    message: 'This is the code 4321 to verify your account'
+  },
+  {
+    phoneNumber: '4153718781',
+    message: 'This is the code 4562 to verify your account'
+  },
+  {
+    phoneNumber: '4159518782',
+    message: 'This is the code 4321 to verify your account'
+  },
+  {
+    phoneNumber: '4158718781',
+    message: 'This is the code 4562 to verify your account'
+  },
+  {
+    phoneNumber: '4153818782',
+    message: 'This is the code 4321 to verify your account'
+  },
+  {
+    phoneNumber: '4154318781',
+    message: 'This is the code 4562 to verify your account'
+  },
+  {
+    phoneNumber: '4151218782',
+    message: 'This is the code 4321 to verify your account'
+  }
+];
+```
+
+After this array created:
+
+- Create a queue with ```Kue```
+- Write a loop that will go through the array ```jobs``` and for each object:
+    - Create a new job to the queue ```push_notification_code_2``` with the current object
+    - If there is no error, log to the console ```Notification job created: JOB_ID```
+    - On the job completion, log to the console ```Notification job JOB_ID completed```
+    - On the job failure, log to the console ```Notification job JOB_ID failed: ERROR```
+    - On the job progress, log to the console ```Notification job JOB_ID PERCENTAGE% complete```
+
+<b>Terminal 1:</b>
+
+```
+bob@dylan:~$ npm run dev 7-job_creator.js 
+
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "7-job_creator.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 7-job_creator.js`
+Notification job created: 39
+Notification job created: 40
+Notification job created: 41
+Notification job created: 42
+Notification job created: 43
+Notification job created: 44
+Notification job created: 45
+Notification job created: 46
+Notification job created: 47
+Notification job created: 48
+Notification job created: 49
+```
 
 ## 9. Track Progress and Errors with Kue: Create the Job Processor
+In a file named ```7-job_processor.js```:
 
+Create an array that will contain the blacklisted phone numbers. Add in it ```4153518780``` and ```4153518781``` - these 2 numbers will be blacklisted by our jobs processor.
+
+Create a function ```sendNotification``` that takes 4 arguments: ```phoneNumber```, ```message```, ```job```, and ```done```:
+
+- When the function is called, track the progress of the ```job``` of ```0``` out of ```100```
+- If ```phoneNumber``` is included in the “blacklisted array”, fail the job with an ```Error``` object and the message: ```Phone number PHONE_NUMBER is blacklisted```
+- Otherwise:
+    - Track the progress to 50%
+    - Log to the console ```Sending notification to PHONE_NUMBER, with message: MESSAGE```
+Create a queue with ```Kue``` that will proceed job of the queue ```push_notification_code_2``` with two jobs at a time.
+
+<b>Requirements:</b>
+
+- You only need one Redis server to execute the program
+- You will need to have two node processes to run each script at the same time
+- You muse use ```Kue``` to set up the queue
+- Executing the jobs list should log to the console the following:
+
+<b>Terminal 2:</b>
+
+```
+bob@dylan:~$ npm run dev 7-job_processor.js 
+
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "7-job_processor.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 7-job_processor.js`
+Sending notification to 4153518743, with message: This is the code 4321 to verify your account
+Sending notification to 4153538781, with message: This is the code 4562 to verify your account
+Sending notification to 4153118782, with message: This is the code 4321 to verify your account
+Sending notification to 4153718781, with message: This is the code 4562 to verify your account
+Sending notification to 4159518782, with message: This is the code 4321 to verify your account
+Sending notification to 4158718781, with message: This is the code 4562 to verify your account
+Sending notification to 4153818782, with message: This is the code 4321 to verify your account
+Sending notification to 4154318781, with message: This is the code 4562 to verify your account
+Sending notification to 4151218782, with message: This is the code 4321 to verify your account
+```
+
+<b>And at the same time in terminal 1:</b>
+
+```
+...
+Notification job #39 0% complete
+Notification job #40 0% complete
+Notification job #39 failed: Phone number 4153518780 is blacklisted
+Notification job #40 failed: Phone number 4153518781 is blacklisted
+Notification job #41 0% complete
+Notification job #41 50% complete
+Notification job #42 0% complete
+Notification job #42 50% complete
+Notification job #41 completed
+Notification job #42 completed
+Notification job #43 0% complete
+Notification job #43 50% complete
+Notification job #44 0% complete
+Notification job #44 50% complete
+Notification job #43 completed
+Notification job #44 completed
+Notification job #45 0% complete
+Notification job #45 50% complete
+Notification job #46 0% complete
+Notification job #46 50% complete
+Notification job #45 completed
+Notification job #46 completed
+Notification job #47 0% complete
+Notification job #47 50% complete
+Notification job #48 0% complete
+Notification job #48 50% complete
+Notification job #47 completed
+Notification job #48 completed
+Notification job #49 0% complete
+Notification job #49 50% complete
+Notification job #49 completed
+```
 
 ## 10. Writing the Job Creation Function
+In a file named ```8-job.js```, create a function named ```createPushNotificationsJobs```:
 
+- It takes into argument ```jobs``` (array of objects), and ```queue``` (```Kue``` queue)
+- If ```jobs``` is not an array, it should throw an ```Error``` with message: ```Jobs is not an array```
+- For each job in ```jobs```, create a job in the queue ```push_notification_code_3```
+- When a job is created, it should log to the console ```Notification job created: JOB_ID```
+- When a job is complete, it should log to the console ```Notification job JOB_ID completed```
+- When a job is failed, it should log to the console ```Notification job JOB_ID failed: ERROR```
+- When a job is making progress, it should log to the console ```Notification job JOB_ID PERCENT% complete```
+
+```
+bob@dylan:~$ cat 8-job-main.js 
+import kue from 'kue';
+
+import createPushNotificationsJobs from './8-job.js';
+
+const queue = kue.createQueue();
+
+const list = [
+    {
+        phoneNumber: '4153518780',
+    message: 'This is the code 1234 to verify your account'
+    }
+];
+createPushNotificationsJobs(list, queue);
+
+bob@dylan:~$
+bob@dylan:~$ npm run dev 8-job-main.js 
+
+> queuing_system_in_js@1.0.0 dev /root
+> nodemon --exec babel-node --presets @babel/preset-env "8-job-main.js"
+
+[nodemon] 2.0.4
+[nodemon] to restart at any time, enter `rs`
+[nodemon] watching path(s): *.*
+[nodemon] watching extensions: js,mjs,json
+[nodemon] starting `babel-node --presets @babel/preset-env 8-job-main.js`
+Notification job created: 51
+```
 
 ## 11. Writing the Test for Job Creation
+Now that you created a job creator, let’s add tests:
 
+- Import the function ```createPushNotificationsJobs```
+- Create a queue with ```Kue```
+- Write a test suite for the ```createPushNotificationsJobs``` function:
+    - Use ```queue.testMode``` to validate which jobs are inside the queue
+    - etc.
+
+<b>Requirements:</b>
+- Make sure to enter the test mode without processing the jobs before executing the tests
+- Make sure to clear the queue and exit the test mode after executing the tests
+
+```
+bob@dylan:~$ npm test 8-job.test.js 
+
+> queuing_system_in_js@1.0.0 test /root
+> mocha --require @babel/register --exit "8-job.test.js"
+
+
+
+  createPushNotificationsJobs
+    ✓ display a error message if jobs is not an array
+Notification job created: 1
+Notification job created: 2
+    ✓ create two new jobs to the queue
+...
+
+  123 passing (417ms)
+```
 
 ## 12. Set Up the Utils and Functions
+In a file ```9-server_utils.js```, create an array ```listProducts``` containing the list of the following products:
+- Id: 1, name: ```Suitcase 250```, price: 50, stock: 4
+- Id: 2, name: ```Suitcase 450```, price: 100, stock: 10
+- Id: 3, name: ```Suitcase 650```, price: 350, stock: 2
+- Id: 4, name: ```Suitcase 1050```, price: 550, stock: 5
 
+Create a function named ```getItemById```:
+- It will take ```id``` as argument
+- It will return the item from ```listProducts``` with the same id
 
 ## 13. List the Available Products
+Copy ```9-server_utils.js``` and create ```9-server_get.js```
 
+Create a GET route named ```list_products```, that will display the list of every available product with the following JSON format:
+```
+[
+  {
+    "itemId":,
+    "itemName":,
+    "price":,
+    "initialAvailableQuantity":,
+  },
+  ...
+]
+```
 
 ## 14. Create the Connection with Redis
+Copy ```9-server_get.js``` and create ```9-server_redis.js```
 
+Create a client to connect to the Redis server:
+- Write a function ```reserveStockById```, that will take ```itemId``` and ```stock``` as arguments. It will set in Redis the stock for the key ```item.ITEM_ID```
+- Write an async function getCurrentReservedStockById, that will take itemId as an argument. It will return the reserved stock for a specific item
 
 ## 15. Display the Current Stock for a Specific Item
+Copy ```9-server_redis.js``` and create ```9-server_available.js```
 
+Create a GET route named ```list_products/:itemId```, that will display the current product and the current available stock with the following JSON format:
+```
+{
+  "itemId":,
+  "itemName":,
+  "price":,
+  "initialAvailableQuantity":,
+  "currentQuantity":
+}
+```
+If the item does not exist, it should display:
+```
+{
+  status: "Product not found"
+}
+```
 
 ## 16. In Stock?
+<b>Data</b>
+Create an array ```listProducts``` containing the list of the following products:
+- Id: 1, name: ```Suitcase 250```, price: 50, stock: 4
+- Id: 2, name: ```Suitcase 450```, price: 100, stock: 10
+- Id: 3, name: ```Suitcase 650```, price: 350, stock:``` 2
+- Id: 4, name: Suitcase 1050, price: 550, stock: 5
 
+<b>Data access</b>
+Create a function named ```getItemById```:
+- It will take ``id as argument
+- It will return the item from ```listProducts``` with the same id
+
+<b>Server</b>
+Create an ```express server``` listening on the port 1245. (You will start it via: npm run ```dev 9-stock.js```)
+
+<b>Products</b>
+Create the route ```GET /list_products``` that will return the list of every available product with the following JSON format:
+```
+bob@dylan:~$ curl localhost:1245/list_products ; echo ""
+[{"itemId":1,"itemName":"Suitcase 250","price":50,"initialAvailableQuantity":4},{"itemId":2,"itemName":"Suitcase 450","price":100,"initialAvailableQuantity":10},{"itemId":3,"itemName":"Suitcase 650","price":350,"initialAvailableQuantity":2},{"itemId":4,"itemName":"Suitcase 1050","price":550,"initialAvailableQuantity":5}]
+bob@dylan:~$
+```
+
+<b>In stock in Redis</b>
+Create a client to connect to the Redis server:
+
+- Write a function ```reserveStockById``` that will take ```itemId``` and ```stock as arguments:```
+  - It will set in Redis the stock for the key ```item.ITEM_ID```
+- Write an async function ```getCurrentReservedStockById```, that will take ```itemId``` as an argument:
+  - It will return the reserved stock for a specific item
+
+<b>Product detail</b>
+Create the route ```GET /list_products/:itemId```, that will return the current product and the current available stock (by using ```getCurrentReservedStockById```) with the following JSON format:
+
+```
+bob@dylan:~$ curl localhost:1245/list_products/1 ; echo ""
+{"itemId":1,"itemName":"Suitcase 250","price":50,"initialAvailableQuantity":4,"currentQuantity":4}
+bob@dylan:~$ 
+```
+If the item does not exist, it should return:
+```
+bob@dylan:~$ curl localhost:1245/list_products/12 ; echo ""
+{"status":"Product not found"}
+bob@dylan:~$ 
+```
+
+<b>Reserve a product</b>
+Create the route ```GET /reserve_product/:itemId```:
+
+- If the item does not exist, it should return:
+
+```
+bob@dylan:~$ curl localhost:1245/reserve_product/12 ; echo ""
+{"status":"Product not found"}
+bob@dylan:~$ 
+```
+- If the item exists, it should check that there is at least one stock available. If not it should return:
+```
+bob@dylan:~$ curl localhost:1245/reserve_product/1 ; echo ""
+{"status":"Not enough stock available","itemId":1}
+bob@dylan:~$ 
+```
+- If there is enough stock available, it should reserve one item (by using reserveStockById), and return:
+```
+bob@dylan:~$ curl localhost:1245/reserve_product/1 ; echo ""
+{"status":"Reservation confirmed","itemId":1}
+bob@dylan:~$ 
+```
+<b>Requirements:</b>
+- Make sure to use ```promisify``` with Redis
+- Make sure to use the ```await```/```async``` keyword to get the value from Redis
+- Make sure the format returned by the web application is always JSON and not text
 
 ## 17. An Express Application and Kue
+Create a basic Express server:
+- It should listen to the port 1245
 
+Create a basic queue:
+- It should create jobs with the name ```reserve_seat```
+
+Create a client with Redis:
+- Create a function ```reserveSeat```, that will take into argument ```number```, and set the key ```available_seats``` with the number
+- Create a function ```getCurrentAvailableSeats```, it will return the current number of available seats
+- When launching the application, set the number of available to 50
