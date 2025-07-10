@@ -5,8 +5,8 @@ import kue from 'kue';
 const queue = kue.createQueue();
 
 const jobData = {
-  phoneNumber: '1234567890',
-  message: 'This is a test notification',
+  phoneNumber: '4153518780',
+  message: 'This is the code to verify your account'
 };
 
 // Create job
@@ -28,5 +28,5 @@ job.on('complete', () => {
 
 // On failure
 job.on('failed', () => {
-  console.log('Notification job completred');
+  console.log('Notification job failed');
 });
